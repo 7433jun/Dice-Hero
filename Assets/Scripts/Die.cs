@@ -106,26 +106,12 @@ public class Die : MonoBehaviour {
         } while (testHitVector != Vector3.zero);
     }
 
-    bool log = false;
-
     void Update()
     {
 		// determine the value is the die is not rolling
         if (!rolling && localHit)
         {
             GetValue();
-            if (log)
-            {
-                if (value != 0)
-                {
-                    Debug.Log(value);
-                    log = false;
-                }
-            }
-        }
-        else
-        {
-            log = true;
         }
     }
 
