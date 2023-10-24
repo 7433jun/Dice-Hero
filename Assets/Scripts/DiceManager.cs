@@ -7,8 +7,11 @@ public class DiceManager : MonoBehaviour
 {
     [SerializeField] List<GameObject> diceList = new List<GameObject>();
     [SerializeField] Text reRollButtonText;
+    [SerializeField] GameObject grayMask;
 
     public int reRollCount;
+    bool activeReRoll;
+    bool isButtonPressed;
 
     public void RollAll()
     {
@@ -30,6 +33,7 @@ public class DiceManager : MonoBehaviour
         // 林荤困 雀傈
         die.GetComponent<Rigidbody>().AddTorque(new Vector3(200 * Random.value -200 * Random.value, 200 * Random.value - 200 * Random.value), ForceMode.Impulse);
 
+        
     }
 
     public void GetValue()
@@ -47,37 +51,80 @@ public class DiceManager : MonoBehaviour
         Debug.Log(str);
     }
 
-    public void SelectDie()
+    public GameObject SelectObject()
     {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
+        GameObject selectedObject = null;
 
-        if(Physics.Raycast(ray, out hit))
+        if (Physics.Raycast(ray, out hit))
         {
-            GameObject selectedObject = hit.collider.gameObject;
+            selectedObject = hit.collider.gameObject;
+        }
 
-            if(selectedObject.GetComponent<Die>() != null)
+        return selectedObject;
+    }
+
+    public void ReRoll()
+    {
+        GameObject selectedObject = SelectObject();
+
+        if (selectedObject.GetComponent<Die>() != null)
+        {
+            Roll(selectedObject);
+            reRollCount--;
+            reRollButtonText.text = $"府费 {reRollCount}雀";
+        }
+
+        activeReRoll = false;
+        grayMask.SetActive(false);
+    }
+
+    public void ReRollButton()
+    {
+        if(reRollCount > 0)
+        {
+            if (activeReRoll == false)
             {
-                Roll(selectedObject);
+                activeReRoll = true;
+                grayMask.SetActive(true);
+            }
+            else
+            {
+                activeReRoll = false;
+                grayMask.SetActive(false);
             }
         }
     }
+
+
+
     private void Start()
     {
+        activeReRoll = false;
         reRollButtonText.text = $"府费 {reRollCount}雀";
         RollAll();
     }
 
     private void Update()
     {
-        if (Input.GetMouseButtonUp(0))
+        if (activeReRoll)
         {
-            if(reRollCount > 0)
+            if (Input.GetMouseButtonDown(0))
             {
-                SelectDie();
-                reRollCount--;
-                reRollButtonText.text = $"府费 {reRollCount}雀";
+                isButtonPressed = true;
+            }
+
+            if (Input.GetMouseButtonUp(0))
+            {
+                if (isButtonPressed)
+                {
+                    ReRoll();
+                    isButtonPressed = false;
+                }
             }
         }
+
+        
     }
 }
