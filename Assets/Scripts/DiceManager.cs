@@ -21,7 +21,7 @@ public class DiceManager : MonoBehaviour
         }
     }
 
-    public void Roll(GameObject die)
+    static public void Roll(GameObject die)
     {
         // 주사위가 튀어오를 방향
         Vector3 force = new Vector3(-3 + 6 * Random.value, 8 + 10 * Random.value, -3 + 6 * Random.value);
@@ -32,12 +32,16 @@ public class DiceManager : MonoBehaviour
         die.transform.rotation = randomRotation;
         // 주사위 회전
         die.GetComponent<Rigidbody>().AddTorque(new Vector3(200 * Random.value -200 * Random.value, 200 * Random.value - 200 * Random.value), ForceMode.Impulse);
-
-        
     }
 
     public void GetValue()
     {
+        if (isDiceRolling())
+        {
+            Debug.Log("구르고 있는 주사위가 있음");
+            return;
+        }
+
         string str = "";
         int sum = 0;
 
@@ -67,6 +71,7 @@ public class DiceManager : MonoBehaviour
 
     public void ReRoll()
     {
+
         GameObject selectedObject = SelectObject();
 
         if (selectedObject.GetComponent<Die>() != null)
@@ -82,6 +87,12 @@ public class DiceManager : MonoBehaviour
 
     public void ReRollButton()
     {
+        if (isDiceRolling())
+        {
+            Debug.Log("구르고 있는 주사위가 있음");
+            return;
+        }
+
         if(reRollCount > 0)
         {
             if (activeReRoll == false)
@@ -95,8 +106,24 @@ public class DiceManager : MonoBehaviour
                 grayMask.SetActive(false);
             }
         }
+        else
+        {
+            Debug.Log("리롤 기회가 없음");
+        }
     }
 
+    private bool isDiceRolling()
+    {
+        foreach(var die in diceList)
+        {
+            if(die.GetComponent<Die>().value == 0)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
 
 
     private void Start()

@@ -38,7 +38,10 @@ public class Die : MonoBehaviour {
 	// hitVector check margin
     protected float validMargin = 0.01F;
 
-	// true is die is still rolling
+    // localhit 이 0일때 다시 굴리고 나서 대기하게하는 플래그
+    bool reRollFlag = true;
+
+    // true is die is still rolling
     public bool rolling
     {
         get
@@ -108,6 +111,16 @@ public class Die : MonoBehaviour {
 
     void Update()
     {
+        // 구르지는 않지만 값이 나오지 않았을 경우
+        if (!rolling && value == 0)
+        {
+            if (reRollFlag)
+            {
+                reRollFlag = false;
+                StartCoroutine(CheckLocalHit());
+            }
+        }
+
 		// determine the value is the die is not rolling
         if (!rolling && localHit)
         {
@@ -132,4 +145,14 @@ public class Die : MonoBehaviour {
         return Vector3.zero;
     }
 	
+    // 잠시 대기 후 계속 value가 0이면 다시 굴림
+    IEnumerator CheckLocalHit()
+    {
+        yield return new WaitForSecondsRealtime(1.0f);
+        if(!rolling && value == 0)
+        {
+            DiceManager.Roll(this.gameObject);
+        }
+        reRollFlag = true;
+    }
 }
