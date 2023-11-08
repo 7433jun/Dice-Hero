@@ -2,12 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class DiceManager : MonoBehaviour
 {
     [SerializeField] List<GameObject> diceList = new List<GameObject>();
-    [SerializeField] Text reRollButtonText;
+    [SerializeField] TextMeshProUGUI reRollButtonText;
     [SerializeField] GameObject grayMask;
+    [SerializeField] GameObject grayMaskCamera;
 
     public int reRollCount;
     bool activeReRoll;
@@ -69,6 +71,7 @@ public class DiceManager : MonoBehaviour
 
         activeReRoll = false;
         grayMask.SetActive(false);
+        grayMaskCamera.SetActive(false);
     }
 
     public void ReRollButton()
@@ -85,11 +88,13 @@ public class DiceManager : MonoBehaviour
             {
                 activeReRoll = true;
                 grayMask.SetActive(true);
+                grayMaskCamera.SetActive(true);
             }
             else
             {
                 activeReRoll = false;
                 grayMask.SetActive(false);
+                grayMaskCamera.SetActive(false);
             }
         }
         else
