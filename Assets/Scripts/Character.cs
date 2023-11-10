@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class Character : MonoBehaviour
 {
+    public int code;
     public string characterName;
     public int maxHealth;
     public int currentHealth;
-    public int attack;
 }

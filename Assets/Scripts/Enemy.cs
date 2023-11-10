@@ -4,5 +4,8 @@ using UnityEngine;
 
 public class Enemy : Character
 {
-    public int exp;
+    private void Start()
+    {
+        maxHealth = 100;
+    }
 }

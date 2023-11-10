@@ -4,7 +4,11 @@ using UnityEngine;
 
 public class Player : Character
 {
-    public int level;
-    public int maxExp;
-    public int currentExp;
+    private int attack;
+    private int addHealth;
+
+    private void Start()
+    {
+        maxHealth = 100;
+    }
 }

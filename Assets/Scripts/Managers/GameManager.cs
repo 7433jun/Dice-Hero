@@ -2,9 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GameManager : MonoBehaviour
+public class GameManager : Singleton<GameManager>
 {
-
     void Start()
     {
         
@@ -12,13 +11,11 @@ public class GameManager : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetMouseButtonDown(0))
-        {
-            Debug.Log(SelectObject());
-        }
+
     }
 
-    public static GameObject SelectObject()
+    //마우스 위치의 3D 오브젝트 가져오는 함수
+    public GameObject SelectObject()
     {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
@@ -28,6 +25,8 @@ public class GameManager : MonoBehaviour
         {
             selectedObject = hit.collider.gameObject;
         }
+
+        Debug.Log(selectedObject);
 
         return selectedObject;
     }

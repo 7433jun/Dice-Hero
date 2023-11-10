@@ -60,7 +60,7 @@ public class DiceManager : MonoBehaviour
     public void ReRoll()
     {
 
-        GameObject selectedObject = GameManager.SelectObject();
+        GameObject selectedObject = GameManager.instance.SelectObject();
 
         if (selectedObject.GetComponent<Die>() != null)
         {
