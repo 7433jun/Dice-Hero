@@ -3630,7 +3630,7 @@ Transform:
   m_GameObject: {fileID: 736341953}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.13560048, y: 23.733595, z: -11.865593}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -4590,6 +4590,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   canvas: {fileID: 384470170}
   linePrefab: {fileID: 6515888774635860045, guid: 6a5506906949a0e4ead013ef399a93c9, type: 3}
+  player: {fileID: 1016611729}
+  enemies:
+  - {fileID: 490314850}
 --- !u!1 &919243624
 GameObject:
   m_ObjectHideFlags: 0
@@ -11468,6 +11471,6 @@ SceneRoots:
   - {fileID: 1451065903}
   - {fileID: 1515274739}
   - {fileID: 1429168352}
-  - {fileID: 1248117427}
   - {fileID: 736341955}
   - {fileID: 913403694}
+  - {fileID: 1248117427}
