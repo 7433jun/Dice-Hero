@@ -7,5 +7,6 @@ public class Enemy : Character
     private void Start()
     {
         maxHealth = 100;
+        currentHealth = 100;
     }
 }

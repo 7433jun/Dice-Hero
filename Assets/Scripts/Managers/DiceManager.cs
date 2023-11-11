@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-public class DiceManager : MonoBehaviour
+public class DiceManager : Singleton<DiceManager>
 {
     [SerializeField] List<GameObject> diceList = new List<GameObject>();
     [SerializeField] TextMeshProUGUI reRollButtonText;
@@ -103,7 +103,7 @@ public class DiceManager : MonoBehaviour
         }
     }
 
-    private bool isDiceRolling()
+    public bool isDiceRolling()
     {
         foreach(var die in diceList)
         {

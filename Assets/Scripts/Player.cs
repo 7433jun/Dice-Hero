@@ -10,5 +10,6 @@ public class Player : Character
     private void Start()
     {
         maxHealth = 100;
+        currentHealth = 100;
     }
 }

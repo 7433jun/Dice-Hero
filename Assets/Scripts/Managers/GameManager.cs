@@ -26,8 +26,6 @@ public class GameManager : Singleton<GameManager>
             selectedObject = hit.collider.gameObject;
         }
 
-        Debug.Log(selectedObject);
-
         return selectedObject;
     }
 }
