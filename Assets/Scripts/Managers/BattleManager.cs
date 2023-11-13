@@ -6,6 +6,81 @@ using UnityEngine.UI;
 
 public class BattleManager : MonoBehaviour
 {
+    [SerializeField] private List<GameObject> readyDiceList = new List<GameObject>();
+
+    private GameObject selectObject;
+
+    void Update()
+    {
+        if (Input.GetMouseButtonDown(0))
+        {
+            if (!DiceManager.instance.isDiceRolling())
+            {
+                selectObject = GameManager.instance.SelectObject();
+
+                if (selectObject.GetComponent<Die>() != null)
+                {
+                    if (readyDiceList.Contains(selectObject))
+                    {
+                        Debug.Log("리스트에서 뺌");
+                        readyDiceList.Remove(selectObject);
+                        OutLineOff(selectObject);
+                    }
+                    else
+                    {
+                        Debug.Log("리스트에 넣음");
+                        readyDiceList.Add(selectObject);
+                        OutLineOn(selectObject);
+                    }
+                }
+                else if(selectObject.GetComponent<Enemy>() != null)
+                {
+                    Enemy enemy = selectObject.GetComponent<Enemy>();
+
+                    if (readyDiceList.Count != 0)
+                    {
+                        int total = 0;
+                        foreach(var die in readyDiceList)
+                        {
+                            OutLineOff(die);
+                            total += die.GetComponent<Die>().value;
+                        }
+                        readyDiceList.Clear();
+
+                        PlayerHit(enemy, total);
+                    }
+                    else
+                    {
+
+                    }
+                }
+            }
+        }
+    }
+
+    private void OutLineOn(GameObject die)
+    {
+        die.GetComponent<Renderer>().material.SetFloat("_FirstOutlineWidth", 0.15f);
+    }
+
+    private void OutLineOff(GameObject die)
+    {
+        die.GetComponent<Renderer>().material.SetFloat("_FirstOutlineWidth", 0f);
+    }
+    private void PlayerHit(Enemy enemy, int damage)
+    {
+        enemy.currentHealth -= damage;
+
+        enemy.GetComponentInChildren<Slider>().value = (float)enemy.currentHealth / (float)enemy.maxHealth;
+
+        enemy.GetComponentInChildren<TextMeshProUGUI>().text = $"{enemy.currentHealth}/{enemy.maxHealth}";
+    }
+}
+
+// 드래그 형식의 플레이어 공격
+/*
+public class BattleManager : MonoBehaviour
+{
 
     [SerializeField] GameObject canvas;
     [SerializeField] GameObject linePrefab;
@@ -122,3 +197,4 @@ public class BattleManager : MonoBehaviour
         die.gameObject.SetActive(false);
     }
 }
+*/

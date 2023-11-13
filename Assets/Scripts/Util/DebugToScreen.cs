@@ -18,20 +18,6 @@ public class DebugToScreen : MonoBehaviour
 
     void HandleLog(string logString, string stackTrace, LogType type)
     {
-        //myLog = logString;
-        //string newString = "\n [" + type + "] : " + myLog;
-        //myLogQueue.Enqueue(newString);
-        //if (type == LogType.Exception)
-        //{
-        //    newString = "\n" + stackTrace;
-        //    myLogQueue.Enqueue(newString);
-        //}
-        //myLog = string.Empty;
-        //foreach (string mylog in myLogQueue)
-        //{
-        //    myLog += mylog;
-        //}
-
         string newString = "[" + type + "] : " + logString;
         myLogQueue.Enqueue(newString); // 새로운 로그 메시지 추가
 
@@ -55,6 +41,7 @@ public class DebugToScreen : MonoBehaviour
     {
         GUIStyle style = new GUIStyle(GUI.skin.label); // 현재 GUI 스킨의 레이블 스타일 복사
         style.fontSize = 40; // 원하는 글자 크기로 설정
+        style.normal.textColor = Color.red; // 원하는 글자 색상으로 설정
 
         GUILayout.Label(myLog, style); // 스타일을 적용하여 레이블 표시
     }
