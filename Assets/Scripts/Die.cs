@@ -29,6 +29,10 @@ public class Die : MonoBehaviour {
     // current value, 0 is undetermined (die is rolling) or invalid.
     public int value = 0;
 
+    // 공격가능 여부
+    public bool useable = true;
+    // 본래 색
+    public Color color = Color.red;
 
 	//------------------------------------------------------------------------------------------------------------------------------
 	// protected and private attributes

@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-public class DiceManager : Singleton<DiceManager>
+public class DiceManager : MonoBehaviour
 {
     [SerializeField] List<GameObject> diceList = new List<GameObject>();
     [SerializeField] TextMeshProUGUI reRollButtonText;
@@ -12,16 +12,8 @@ public class DiceManager : Singleton<DiceManager>
     [SerializeField] GameObject grayMaskCamera;
 
     public int reRollCount;
-    bool activeReRoll;
+    public bool activeReRoll = false;
     bool isButtonPressed;
-
-    public void RollAll()
-    {
-        foreach(var die in diceList)
-        {
-            Roll(die);
-        }
-    }
 
     static public void Roll(GameObject die)
     {
@@ -34,6 +26,18 @@ public class DiceManager : Singleton<DiceManager>
         die.transform.rotation = randomRotation;
         // 林荤困 雀傈
         die.GetComponent<Rigidbody>().AddTorque(new Vector3(200 * Random.value -200 * Random.value, 200 * Random.value - 200 * Random.value), ForceMode.Impulse);
+    }
+
+    public void StartPlayerTurnDice()
+    {
+        foreach (var die in diceList)
+        {
+            die.GetComponent<Renderer>().material.color = die.GetComponent<Die>().color;
+            die.GetComponent<Die>().useable = true;
+            reRollCount = 1;
+            ReRollButtonText();
+            Roll(die);
+        }
     }
 
     public void GetValue()
@@ -66,7 +70,7 @@ public class DiceManager : Singleton<DiceManager>
         {
             Roll(selectedObject);
             reRollCount--;
-            reRollButtonText.text = $"府费 {reRollCount}雀";
+            ReRollButtonText();
         }
 
         activeReRoll = false;
@@ -116,12 +120,15 @@ public class DiceManager : Singleton<DiceManager>
         return false;
     }
 
+    private void ReRollButtonText()
+    {
+        reRollButtonText.text = $"府费 {reRollCount}雀";
+    }
+
 
     private void Start()
     {
-        activeReRoll = false;
-        reRollButtonText.text = $"府费 {reRollCount}雀";
-        RollAll();
+        ReRollButtonText();
     }
 
     private void Update()

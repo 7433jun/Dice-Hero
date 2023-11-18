@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class ButtonManager : MonoBehaviour
 {
+
+
     public void SetActiveButton(GameObject gameObject)
     {
         if (gameObject.activeSelf)

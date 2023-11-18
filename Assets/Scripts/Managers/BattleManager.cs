@@ -6,44 +6,98 @@ using UnityEngine.UI;
 
 public class BattleManager : MonoBehaviour
 {
-    [SerializeField] private List<GameObject> readyDiceList = new List<GameObject>();
+    [SerializeField] DiceManager diceManager;
+
+    [SerializeField] Player player;
+    [SerializeField] List<Enemy> enemies = new List<Enemy>();
+
+    [SerializeField] private List<Die> readyDiceList = new List<Die>();
 
     private GameObject selectObject;
 
+    private void OnEnable()
+    {
+        GameManager.instance.state = GameManager.State.battle;
+
+        BattleStart();
+    }
+
     void Update()
+    {
+        if (GameManager.instance.state == GameManager.State.playerTurn)
+        {
+            PlayerTurn();
+        }
+    }
+
+    private void BattleStart()
+    {
+        Debug.Log("전투시작");
+
+        StartCoroutine(StartPlayerTurn());
+    }
+
+    IEnumerator StartPlayerTurn()
+    {
+        diceManager.StartPlayerTurnDice();
+
+        yield return new WaitForSeconds(1f);
+
+        Debug.Log("플레이어 턴");
+
+        GameManager.instance.state = GameManager.State.playerTurn;
+    }
+
+    private void PlayerTurn()
     {
         if (Input.GetMouseButtonDown(0))
         {
-            if (!DiceManager.instance.isDiceRolling())
+            if (!diceManager.isDiceRolling())
             {
                 selectObject = GameManager.instance.SelectObject();
 
                 if (selectObject.GetComponent<Die>() != null)
                 {
-                    if (readyDiceList.Contains(selectObject))
+                    Die die = selectObject.GetComponent<Die>();
+
+                    if (diceManager.activeReRoll)
                     {
-                        Debug.Log("리스트에서 뺌");
-                        readyDiceList.Remove(selectObject);
-                        OutLineOff(selectObject);
+                        return;
                     }
-                    else
+
+                    if (die.useable)
                     {
-                        Debug.Log("리스트에 넣음");
-                        readyDiceList.Add(selectObject);
-                        OutLineOn(selectObject);
+                        if (readyDiceList.Contains(die))
+                        {
+                            readyDiceList.Remove(die);
+                            OutLineOff(die);
+                        }
+                        else
+                        {
+                            readyDiceList.Add(die);
+                            OutLineOn(die);
+                        }
                     }
                 }
-                else if(selectObject.GetComponent<Enemy>() != null)
+                else if (selectObject.GetComponent<Enemy>() != null)
                 {
                     Enemy enemy = selectObject.GetComponent<Enemy>();
 
                     if (readyDiceList.Count != 0)
                     {
                         int total = 0;
-                        foreach(var die in readyDiceList)
+                        foreach (var die in readyDiceList)
                         {
                             OutLineOff(die);
-                            total += die.GetComponent<Die>().value;
+
+                            total += die.value;
+
+                            // 그냥 Color.gray가 눈에 잘띄긴 한데
+                            //DieColor(die, new Color(0.88f, 0.88f, 0.88f));
+                            DieColor(die, Color.gray);
+
+                            die.useable = false;
+
                         }
                         readyDiceList.Clear();
 
@@ -58,22 +112,95 @@ public class BattleManager : MonoBehaviour
         }
     }
 
-    private void OutLineOn(GameObject die)
+    IEnumerator EnemyTurn()
+    {
+        yield return new WaitForSeconds(1f);
+
+        Debug.Log("에너미 턴");
+
+        foreach (Enemy enemy in enemies)
+        {
+            EnemyHit(enemy);
+            yield return new WaitForSeconds(1f);
+        }
+
+        StartCoroutine(StartPlayerTurn());
+    }
+
+    private bool CheckPlayerWin()
+    {
+        foreach (var enemy in enemies)
+        {
+            if (enemy.currentHealth <= 0)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private void OutLineOn(Die die)
     {
         die.GetComponent<Renderer>().material.SetFloat("_FirstOutlineWidth", 0.15f);
     }
 
-    private void OutLineOff(GameObject die)
+    private void OutLineOff(Die die)
     {
         die.GetComponent<Renderer>().material.SetFloat("_FirstOutlineWidth", 0f);
     }
+
+    private void DieColor(Die die, Color color)
+    {
+        die.GetComponent<Renderer>().material.color = color;
+    }
+
     private void PlayerHit(Enemy enemy, int damage)
     {
+        player.GetComponent<Animator>().SetTrigger("Attack");
+        enemy.GetComponent<Animator>().SetTrigger("Hit");
+
         enemy.currentHealth -= damage;
+
+        if (enemy.currentHealth < 0)
+        {
+            enemy.currentHealth = 0;
+        }
 
         enemy.GetComponentInChildren<Slider>().value = (float)enemy.currentHealth / (float)enemy.maxHealth;
 
         enemy.GetComponentInChildren<TextMeshProUGUI>().text = $"{enemy.currentHealth}/{enemy.maxHealth}";
+
+        if (CheckPlayerWin())
+        {
+            GameManager.instance.Path();
+        }
+    }
+
+    private void EnemyHit(Enemy enemy)
+    {
+        player.GetComponent<Animator>().SetTrigger("Hit");
+        enemy.GetComponent<Animator>().SetTrigger("Attack");
+
+        player.currentHealth -= enemy.Enemydamage();
+
+        if (player.currentHealth < 0)
+        {
+            player.currentHealth = 0;
+        }
+
+        player.GetComponentInChildren<Slider>().value = (float)player.currentHealth / (float)player.maxHealth;
+
+        player.GetComponentInChildren<TextMeshProUGUI>().text = $"{player.currentHealth}/{player.maxHealth}";
+    }
+
+    public void EndPlayerTurnButton()
+    {
+        Debug.Log("플레이어 턴 종료");
+
+        GameManager.instance.state = GameManager.State.enemyTurn;
+
+        StartCoroutine(EnemyTurn());
     }
 }
 
