@@ -2,8 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Enemy : Character
+public class Enemy : MonoBehaviour
 {
+    public int code;
+    public string characterName;
+    public int maxHealth;
+    public int currentHealth;
+
     private void Start()
     {
         maxHealth = 100;

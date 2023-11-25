@@ -4,8 +4,6 @@ using UnityEngine;
 
 public class ButtonManager : MonoBehaviour
 {
-
-
     public void SetActiveButton(GameObject gameObject)
     {
         if (gameObject.activeSelf)
@@ -16,5 +14,10 @@ public class ButtonManager : MonoBehaviour
         {
             gameObject.SetActive(true);
         }
+    }
+
+    public void QuitGame()
+    {
+        Application.Quit();
     }
 }

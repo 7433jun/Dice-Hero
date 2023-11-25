@@ -114,7 +114,7 @@ public class Die : MonoBehaviour {
         } while (testHitVector != Vector3.zero);
     }
 
-    void Update()
+    void FixedUpdate()
     {
         // 구르지는 않지만 값이 나오지 않았을 경우
         if (!rolling && value == 0)
@@ -154,9 +154,15 @@ public class Die : MonoBehaviour {
     IEnumerator CheckLocalHit()
     {
         yield return new WaitForSecondsRealtime(1.0f);
+
         if(!rolling && value == 0)
         {
-            DiceManager.Roll(this.gameObject);
+            yield return new WaitForSecondsRealtime(1.0f);
+
+            if(!rolling && value == 0)
+            {
+                DiceManager.Roll(this.gameObject);
+            }
         }
         reRollFlag = true;
     }

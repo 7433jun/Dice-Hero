@@ -15,10 +15,16 @@ public class MySceneManager : MonoBehaviour
             loadingScreen.SetActive(false);
     }
 
-    // ¾À ÀüÈ¯ ÇÔ¼ö
+    // ¾À ÀüÈ¯
     public void SwitchSceneWithLoading(string nextSceneName)
     {
         StartCoroutine(LoadSceneAsync(nextSceneName));
+    }
+
+    // ¾À Àç½ÃÀÛ
+    public void RestartScene()
+    {
+        SwitchSceneWithLoading(SceneManager.GetActiveScene().name);
     }
 
     IEnumerator LoadSceneAsync(string nextSceneName)

@@ -15,16 +15,21 @@ public class BattleManager : MonoBehaviour
 
     private GameObject selectObject;
 
-    private void OnEnable()
+    void Awake()
     {
-        GameManager.instance.state = GameManager.State.battle;
+        gameObject.SetActive(false);
+    }
+
+    void OnEnable()
+    {
+        GameManager.instance.state = Enums.State.battle;
 
         BattleStart();
     }
 
     void Update()
     {
-        if (GameManager.instance.state == GameManager.State.playerTurn)
+        if (GameManager.instance.state == Enums.State.playerTurn)
         {
             PlayerTurn();
         }
@@ -45,7 +50,7 @@ public class BattleManager : MonoBehaviour
 
         Debug.Log("플레이어 턴");
 
-        GameManager.instance.state = GameManager.State.playerTurn;
+        GameManager.instance.state = Enums.State.playerTurn;
     }
 
     private void PlayerTurn()
@@ -198,7 +203,7 @@ public class BattleManager : MonoBehaviour
     {
         Debug.Log("플레이어 턴 종료");
 
-        GameManager.instance.state = GameManager.State.enemyTurn;
+        GameManager.instance.state = Enums.State.enemyTurn;
 
         StartCoroutine(EnemyTurn());
     }

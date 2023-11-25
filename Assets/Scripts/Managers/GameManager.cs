@@ -4,20 +4,8 @@ using UnityEngine;
 
 public class GameManager : Singleton<GameManager>
 {
-    public enum State
-    {
-        start,
-        path,
-        special,
-        shop,
-        battle,
-        playerTurn,
-        enemyTurn,
-        win,
-        lose
-    }
 
-    public State state;
+    public Enums.State state;
 
     [SerializeField] GameObject battleManager;
 
@@ -30,7 +18,7 @@ public class GameManager : Singleton<GameManager>
 
     public void Path()
     {
-        state = State.path;
+        state = Enums.State.path;
         script.SetActive(true);
         battleManager.SetActive(false);
     }
